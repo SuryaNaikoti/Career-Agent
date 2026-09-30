@@ -1,0 +1,46 @@
+# Planned Modules Sequence
+
+Each module is built sequentially and verified before moving forward:
+
+- **Module 00: Project Foundation (Completed)**
+  - Technical architecture, design system, PWA shell, router, mock isolation, documentation, `/api/health`.
+- **Module 01: Authentication & Identity (Completed)**
+  - Supabase Auth integration, Google OAuth, session management, protected routes, `/api/auth/me`.
+- **Module 02: PWA Complete Compliance (Next Module)**
+  - Offline sync, push notification registration, background updates.
+- **Module 03: AI Onboarding**
+  - Interactive career intake interview, fact extraction, preferences wizard.
+- **Module 04: Candidate Career Profile**
+  - Profile data model, skills graph, verified work history, target progression.
+- **Module 05: Job Preferences**
+  - Salary filters, location matrix, remote/hybrid rules, company blocklists.
+- **Module 06: Resume Intelligence**
+  - Resume upload, PDF parsing, skill verification, ATS scoring.
+- **Module 07: Job Discovery**
+  - Public job board ingestion, search connectors, deduplication.
+- **Module 08: Job Matching**
+  - Match scoring algorithm, vector similarity, gaps identification.
+- **Module 09: Job Search Experience**
+  - Infinite scroll, advanced filtering, bookmarking, job alerts.
+- **Module 10: Career AI Assistant**
+  - Conversational agent powered by Gemini API, tool dispatching, structured UI responses.
+- **Module 11: Application Preparation**
+  - Tailored resume generation, tailored cover letter writer, screening answers.
+- **Module 12: Application Engine**
+  - Submission gateway, status lifecycle tracking, application archive.
+- **Module 13: Human Task Engine**
+  - Human-in-the-loop task triggers, legal eligibility prompts, review workflows.
+- **Module 14: Gmail & Hiring Intelligence**
+  - Gmail OAuth, recruiter email classifier, interview calendar sync.
+- **Module 15: Career Agent Automation**
+  - Autonomous scheduled searches, morning briefings, autonomous draft creation.
+- **Module 16: Notifications & Daily Reports**
+  - Push notifications, daily digests, application milestone alerts.
+- **Module 17: Subscription & Monetization**
+  - Pricing tiers, usage limits, premium features.
+- **Module 18: Admin Dashboard**
+  - System health, user analytics, error tracking.
+- **Module 19: Security & Audit**
+  - Access control policies, RLS audits, credential scrubbing, compliance.
+- **Module 20: Analytics**
+  - Conversion rates, application success metrics, interview ratios.

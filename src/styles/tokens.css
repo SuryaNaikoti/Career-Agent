@@ -1,0 +1,45 @@
+/**
+ * Design Tokens for Career Agent — Soft Premium AI Career Intelligence
+ */
+
+:root {
+  /* Brand & Semantic Colors */
+  --career-blue: #2563EB;
+  --career-blue-hover: #1D4ED8;
+  --career-blue-light: #EFF6FF;
+  --ai-indigo: #6366F1;
+  --soft-lavender: #EEF2FF;
+  --career-success: #10B981;
+  --career-success-light: #ECFDF5;
+  --career-warning: #F59E0B;
+  --career-warning-light: #FFFBEB;
+  --career-error: #EF4444;
+  --career-error-light: #FEF2F2;
+
+  /* Neutrals & Surfaces */
+  --career-bg: #F8FAFC;
+  --career-surface: #FFFFFF;
+  --career-surface-subtle: #F1F5F9;
+  --career-text: #0F172A;
+  --career-secondary: #64748B;
+  --career-muted: #94A3B8;
+  --career-border: #E2E8F0;
+  --career-border-light: #F1F5F9;
+
+  /* Radii */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-card: 20px;
+  --radius-card-lg: 24px;
+
+  /* Shadows (Subtle, diffused, zero harsh black) */
+  --shadow-subtle: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --shadow-card-elevated: 0 10px 25px -4px rgba(37, 99, 235, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
+  --shadow-float: 0 20px 30px -10px rgba(15, 23, 42, 0.08);
+
+  /* Safe Area Insets for Mobile */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}

@@ -1,0 +1,60 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+@theme {
+  --color-career-blue: #2563EB;
+  --color-career-blue-hover: #1D4ED8;
+  --color-career-blue-light: #EFF6FF;
+  --color-ai-indigo: #6366F1;
+  --color-soft-lavender: #EEF2FF;
+  --color-career-success: #10B981;
+  --color-career-success-light: #ECFDF5;
+  --color-career-warning: #F59E0B;
+  --color-career-warning-light: #FFFBEB;
+  --color-career-error: #EF4444;
+  --color-career-error-light: #FEF2F2;
+
+  --color-career-bg: #F8FAFC;
+  --color-career-surface: #FFFFFF;
+  --color-career-surface-subtle: #F1F5F9;
+  --color-career-text: #0F172A;
+  --color-career-secondary: #64748B;
+  --color-career-muted: #94A3B8;
+  --color-career-border: #E2E8F0;
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Mobile & PWA ergonomics */
+html, body {
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input, textarea {
+  user-select: auto;
+}
+
+/* Hide scrollbars for clean mobile carousels while maintaining smooth scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe area padding utilities */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Tabular numbers for clean numeric vertical alignment */
+.tabular-numbers {
+  font-variant-numeric: tabular-nums;
+}

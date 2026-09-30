@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" class="h-full antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- Application Brand & Identity -->
+    <title>Career Agent</title>
+    <meta name="description" content="Your AI Career Agent. Discover relevant jobs, understand opportunities, prepare tailored applications, and streamline your career journey." />
+    
+    <!-- OpenGraph & Social Cards -->
+    <meta property="og:title" content="Career Agent" />
+    <meta property="og:description" content="Your AI Career Agent. Discover relevant jobs, understand opportunities, prepare tailored applications, and streamline your career journey." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/icon.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Career Agent" />
+    <meta name="twitter:description" content="Your AI Career Agent. Find jobs, prepare applications, and track hiring activity." />
+    
+    <!-- PWA & Mobile Web Capabilities -->
+    <meta name="theme-color" content="#2563EB" />
+    <meta name="color-scheme" content="light" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Career Agent" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    
+    <!-- Typography: Inter as the single primary UI font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body class="h-full bg-slate-50 text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
+    <div id="root" class="h-full"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Service worker registration
+      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch((err) => {
+            console.debug('ServiceWorker registration omitted:', err);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

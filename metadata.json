@@ -1,0 +1,8 @@
+{
+  "name": "Career Agent",
+  "description": "Your AI Career Agent. Discover relevant jobs, understand opportunities, prepare tailored applications, and streamline your career journey.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

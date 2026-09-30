@@ -1,0 +1,152 @@
+import { AgentConversationItem, CareerAgentStatus } from '../../src/types/agent.js';
+import { DEMO_JOBS } from './jobs.js';
+
+export const DEMO_AGENT_STATUS: CareerAgentStatus = {
+  isActive: true,
+  statusLabel: 'Active',
+  currentSearchTitle: 'Senior Frontend Developer',
+  location: 'Hyderabad + Remote',
+  salaryExpectation: '₹20L+',
+  capabilities: {
+    jobSearch: true,
+    matching: true,
+    resumeTailoring: true,
+    gmailTracking: true,
+  },
+};
+
+export const DEMO_AGENT_CONVERSATIONS: Record<string, AgentConversationItem[]> = {
+  // Scenario matching reference screen flow
+  defaultFlow: [
+    {
+      id: 'msg-1',
+      sender: 'agent',
+      timestamp: '9:41 AM',
+      type: 'welcome',
+      text: "Hi, I'm your Career Agent. I can find opportunities, prepare applications and keep track of your hiring activity.",
+    },
+    {
+      id: 'msg-2',
+      sender: 'user',
+      timestamp: '9:42 AM',
+      type: 'user_query',
+      text: 'Find me senior React jobs in Hyderabad above ₹25L.',
+    },
+    {
+      id: 'msg-3',
+      sender: 'agent',
+      timestamp: '9:42 AM',
+      type: 'understanding',
+      text: "Got it! I'll look for:",
+      understandingData: {
+        role: 'Senior React roles',
+        locations: ['Hyderabad (or Remote)'],
+        minSalary: '₹25L+ salary',
+        experienceLevel: 'Matching your experience level',
+        sources: [
+          { name: 'LinkedIn', iconKey: 'linkedin' },
+          { name: 'Naukri', iconKey: 'naukri' },
+          { name: 'Instahyre', iconKey: 'instahyre' },
+          { name: 'Company Careers', iconKey: 'careers' },
+        ],
+      },
+    },
+    {
+      id: 'msg-4',
+      sender: 'agent',
+      timestamp: '9:42 AM',
+      type: 'searching_progress',
+      text: 'Searching for the best opportunities...',
+      searchSteps: [
+        { id: 's1', label: 'Searching job sources (6 sources)', elapsedTime: '2 sec', status: 'completed' },
+        { id: 's2', label: 'Found 142 jobs', elapsedTime: '8 sec', status: 'completed' },
+        { id: 's3', label: 'Filtering by your criteria', elapsedTime: '18 sec', status: 'completed' },
+        { id: 's4', label: 'Analyzing job descriptions', elapsedTime: '28 sec', status: 'completed' },
+        { id: 's5', label: 'Scoring matches with AI...', elapsedTime: '45 sec', status: 'completed' },
+      ],
+    },
+    {
+      id: 'msg-5',
+      sender: 'agent',
+      timestamp: '9:43 AM',
+      type: 'job_results',
+      text: 'I found 11 jobs that match your criteria. 4 have a strong match score above 90%.',
+      jobs: [DEMO_JOBS[0], DEMO_JOBS[1]],
+    },
+    {
+      id: 'msg-6',
+      sender: 'agent',
+      timestamp: '9:43 AM',
+      type: 'job_detail',
+      selectedJob: DEMO_JOBS[0],
+    },
+    {
+      id: 'msg-7',
+      sender: 'user',
+      timestamp: '9:44 AM',
+      type: 'user_query',
+      text: 'Prepare an application for this job.',
+    },
+    {
+      id: 'msg-8',
+      sender: 'agent',
+      timestamp: '9:44 AM',
+      type: 'application_prep',
+      text: "I'll prepare a tailored application for you. Here's what I'm creating:",
+      prepSteps: [
+        { id: 'p1', label: 'Analyzing job requirements', elapsedTime: 'Done', status: 'completed' },
+        { id: 'p2', label: 'Tailoring your resume', elapsedTime: 'Done', status: 'completed' },
+        { id: 'p3', label: 'Writing a personalized cover letter', elapsedTime: 'Done', status: 'completed' },
+        { id: 'p4', label: 'Answering screening questions', elapsedTime: 'Done', status: 'completed' },
+        { id: 'p5', label: 'Validating against your profile', elapsedTime: 'Done', status: 'completed' },
+      ],
+    },
+    {
+      id: 'msg-9',
+      sender: 'agent',
+      timestamp: '9:44 AM',
+      type: 'application_preview',
+      selectedJob: DEMO_JOBS[0],
+    },
+    {
+      id: 'msg-10',
+      sender: 'agent',
+      timestamp: '9:45 AM',
+      type: 'human_task',
+      text: 'I need your input to complete the application.',
+      humanTask: {
+        id: 'ht-1',
+        type: 'work_authorization',
+        title: 'Work Authorization',
+        companyName: 'AxisTech',
+        question: 'Are you legally authorized to work in the target location?',
+        options: ['Yes', 'No', 'Prefer not to say'],
+        selectedOption: 'Yes',
+        isCompleted: true,
+      },
+    },
+    {
+      id: 'msg-11',
+      sender: 'agent',
+      timestamp: '9:45 AM',
+      type: 'submission_success',
+      text: "Your application has been successfully submitted. I'll track this for you.",
+      selectedJob: DEMO_JOBS[0],
+      applicationCode: 'AXT-2024-0912',
+    },
+    {
+      id: 'msg-12',
+      sender: 'user',
+      timestamp: '9:46 AM',
+      type: 'user_query',
+      text: "What's next for this application?",
+    },
+    {
+      id: 'msg-13',
+      sender: 'agent',
+      timestamp: '9:46 AM',
+      type: 'followup_status',
+      text: "Here's the current status:",
+    },
+  ],
+};
