@@ -110,7 +110,9 @@ export const authService = {
 
     try {
       const validPath = internalRedirectPath && internalRedirectPath.startsWith('/') ? internalRedirectPath : '/app/home';
-      const redirectUrl = typeof window !== 'undefined' ? `${window.location.origin}${validPath}` : undefined;
+      const baseOrigin = import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+      const cleanBase = baseOrigin.replace(/\/+$/, '');
+      const redirectUrl = cleanBase ? `${cleanBase}${validPath}` : undefined;
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
