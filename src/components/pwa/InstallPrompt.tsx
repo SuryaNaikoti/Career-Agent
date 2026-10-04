@@ -169,9 +169,20 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({
     );
   }
 
-  // Compact banner variant
+  // Compact banner variant (mobile-only, clickable to trigger direct install)
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2.5 flex items-center justify-between shadow-md">
+    <div
+      onClick={handleInstallClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleInstallClick();
+        }
+      }}
+      className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2.5 flex items-center justify-between shadow-md cursor-pointer hover:from-blue-700 hover:to-indigo-700 transition-all select-none"
+    >
       <div className="flex items-center gap-2.5 overflow-hidden">
         <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
           <img src="/icon.svg" alt="" className="w-4 h-4" />
@@ -183,13 +194,24 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({
       </div>
       <div className="flex items-center gap-2 shrink-0 ml-2">
         <button
-          onClick={handleInstallClick}
-          className="text-xs font-bold bg-white text-blue-600 px-3 py-1 rounded-lg shadow-xs hover:bg-blue-50 transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleInstallClick();
+          }}
+          disabled={isInstalling}
+          className="text-xs font-bold bg-white text-blue-600 px-3 py-1 rounded-lg shadow-xs hover:bg-blue-50 active:scale-95 transition-all"
         >
-          Install
+          {isInstalling ? 'Installing...' : 'Install'}
         </button>
         {onDismiss && (
-          <button onClick={onDismiss} className="text-white/80 hover:text-white p-1" aria-label="Dismiss">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDismiss();
+            }}
+            className="text-white/80 hover:text-white p-1"
+            aria-label="Dismiss"
+          >
             <X className="w-3.5 h-3.5" />
           </button>
         )}

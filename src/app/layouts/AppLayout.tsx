@@ -35,12 +35,14 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
 
       {/* Main SaaS App Shell Area */}
       <div className="flex-1 flex flex-col min-w-0 bg-slate-50 min-h-screen relative overflow-x-hidden">
-        {/* Optional top install banner if running in browser and installable */}
+        {/* Optional top install banner if running on mobile device in browser and installable */}
         {isInstallable && !isInstalled && showTopInstallBanner && (
-          <InstallPrompt
-            variant="banner"
-            onDismiss={() => setShowTopInstallBanner(false)}
-          />
+          <div className="lg:hidden">
+            <InstallPrompt
+              variant="banner"
+              onDismiss={() => setShowTopInstallBanner(false)}
+            />
+          </div>
         )}
 
         {/* Desktop Top Header (>= 1024px) */}
