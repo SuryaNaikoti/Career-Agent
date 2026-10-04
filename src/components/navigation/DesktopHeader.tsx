@@ -40,6 +40,14 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({
     return 'Dashboard';
   };
 
+  const getDerivedSubtitle = () => {
+    if (subtitle) return subtitle;
+    if (path === '/app/hiring') return 'AI-powered analysis of your hiring emails and application updates';
+    return undefined;
+  };
+
+  const currentSubtitle = getDerivedSubtitle();
+
   return (
     <header className="hidden lg:flex h-16 bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-20 px-8 items-center justify-between">
       {/* Title & Context */}
@@ -47,8 +55,8 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({
         <h1 className="text-lg font-bold text-slate-900 tracking-tight leading-tight">
           {getDerivedTitle()}
         </h1>
-        {subtitle && (
-          <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>
+        {currentSubtitle && (
+          <p className="text-xs text-slate-500 mt-0.5">{currentSubtitle}</p>
         )}
       </div>
 

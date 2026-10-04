@@ -347,7 +347,44 @@ describe('MODULE 14: Background Automation & Scheduling Engine', () => {
         const body: any = await res.json();
         assert.equal(res.status, 401);
         assert.equal(body.authenticated, false);
+
+        // Also verify /api/scheduler/tick rejects unauthenticated
+        const tickRes = await fetch(`http://127.0.0.1:${port}/api/scheduler/tick`, { method: 'POST' });
+        const tickBody: any = await tickRes.json();
+        assert.equal(tickRes.status, 401);
+        assert.equal(tickBody.authenticated, false);
       } finally {
+        server.close();
+      }
+    });
+
+    it('HTTP /api/scheduler/tick authorizes with CRON_SECRET bearer token', async () => {
+      process.env.CRON_SECRET = 'test-secret-key-12345';
+      const app = express();
+      app.use(express.json());
+      app.use('/api/scheduler', schedulerRouter);
+
+      const server = http.createServer(app);
+      await new Promise<void>((resolve) => server.listen(0, resolve));
+      const port = (server.address() as any).port;
+
+      try {
+        // Reject invalid secret
+        const invalidRes = await fetch(`http://127.0.0.1:${port}/api/scheduler/tick`, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer wrong-secret' },
+        });
+        assert.equal(invalidRes.status, 401);
+
+        // Accept valid CRON_SECRET (even when DB returns 503 or 200)
+        const validRes = await fetch(`http://127.0.0.1:${port}/api/scheduler/tick`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${process.env.CRON_SECRET}` },
+        });
+        // DB is null so it reaches handler and returns 503 DATABASE_NOT_CONFIGURED (not 401 Unauthorized)
+        assert.equal(validRes.status, 503);
+      } finally {
+        delete process.env.CRON_SECRET;
         server.close();
       }
     });

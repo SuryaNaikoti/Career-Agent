@@ -11,9 +11,6 @@ import { logger } from '../core/logging/logger.js';
 
 export const schedulerRouter = Router();
 
-// All scheduler routes require candidate authentication
-schedulerRouter.use(requireAuth);
-
 const handleRouteError = (res: Response, error: any, contextMsg: string) => {
   if (error?.name === 'DATABASE_NOT_CONFIGURED' || error?.statusCode === 503) {
     return res.status(503).json({
@@ -44,10 +41,36 @@ const handleRouteError = (res: Response, error: any, contextMsg: string) => {
 };
 
 /**
+ * Middleware for /api/scheduler/tick:
+ * Allows execution if request presents:
+ * 1. A valid candidate Bearer token (via requireAuth), OR
+ * 2. An authorized Vercel Cron header / Bearer token matching CRON_SECRET.
+ * If neither is present or valid, rejects with 401 Unauthorized.
+ */
+const requireSchedulerAuth = async (req: Request, res: Response, next: () => void) => {
+  // Check CRON_SECRET authorization (e.g. from Vercel Cron)
+  const cronSecret = process.env.CRON_SECRET;
+  const authHeader = req.headers.authorization;
+  const vercelCronHeader = req.headers['x-vercel-cron'];
+
+  if (cronSecret && cronSecret.trim().length > 0) {
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7).trim();
+      if (token === cronSecret) {
+        return next();
+      }
+    }
+  }
+
+  // Fallback to standard candidate authentication
+  return requireAuth(req, res, next);
+};
+
+/**
  * GET /api/scheduler/preferences
  * Returns the candidate's persistent background schedules (JOB_SEARCH & DAILY_REPORT).
  */
-schedulerRouter.get('/preferences', async (req: Request, res: Response) => {
+schedulerRouter.get('/preferences', requireAuth, async (req: Request, res: Response) => {
   try {
     const userId = req.authUser?.id;
     if (!userId) {
@@ -65,7 +88,7 @@ schedulerRouter.get('/preferences', async (req: Request, res: Response) => {
  * PUT /api/scheduler/preferences/:type
  * Updates candidate's schedule configuration for JOB_SEARCH or DAILY_REPORT.
  */
-schedulerRouter.put('/preferences/:type', async (req: Request, res: Response) => {
+schedulerRouter.put('/preferences/:type', requireAuth, async (req: Request, res: Response) => {
   try {
     const userId = req.authUser?.id;
     if (!userId) {
@@ -90,7 +113,7 @@ schedulerRouter.put('/preferences/:type', async (req: Request, res: Response) =>
  * GET /api/scheduler/history
  * Returns the candidate's background execution audit history.
  */
-schedulerRouter.get('/history', async (req: Request, res: Response) => {
+schedulerRouter.get('/history', requireAuth, async (req: Request, res: Response) => {
   try {
     const userId = req.authUser?.id;
     if (!userId) {
@@ -110,7 +133,7 @@ schedulerRouter.get('/history', async (req: Request, res: Response) => {
  * GET /api/scheduler/status
  * Returns the overall scheduler worker status.
  */
-schedulerRouter.get('/status', async (req: Request, res: Response) => {
+schedulerRouter.get('/status', requireAuth, async (req: Request, res: Response) => {
   try {
     const status = await backgroundRunnerService.getSchedulerStatus();
     return res.status(200).json({ status });
@@ -122,8 +145,9 @@ schedulerRouter.get('/status', async (req: Request, res: Response) => {
 /**
  * POST /api/scheduler/tick
  * Triggers a manual or cron-driven scheduler tick to process due jobs.
+ * Supports both candidate Bearer tokens and Vercel Cron Bearer tokens (CRON_SECRET).
  */
-schedulerRouter.post('/tick', async (req: Request, res: Response) => {
+schedulerRouter.post('/tick', requireSchedulerAuth, async (req: Request, res: Response) => {
   try {
     const result = await backgroundRunnerService.executeSchedulerTick();
     return res.status(200).json({ result });
