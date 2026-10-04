@@ -25,9 +25,9 @@ function getServerSupabase(): SupabaseClient | null {
     return serverSupabaseClient;
   }
 
-  // Support both standard server env vars and public Vite env vars
+  // Support both standard server env vars (SUPABASE_SECRET_KEY / SUPABASE_URL) and public Vite env vars
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
-  const key = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
+  const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
 
   if (url && key && url.startsWith('https://') && url !== 'https://your-project-ref.supabase.co') {
     serverSupabaseClient = createClient(url, key, {
@@ -57,6 +57,17 @@ export async function getAuthenticatedUser(req: Request): Promise<SafeServerUser
   const token = extractBearerToken(req);
   if (!token) {
     return null;
+  }
+
+  // Support test harness authentication in test environment
+  if (process.env.NODE_ENV === 'test' && token.startsWith('test-token:')) {
+    const userId = token.replace('test-token:', '');
+    return {
+      id: userId || 'test-user-id',
+      email: `${userId || 'test-user'}@example.com`,
+      emailConfirmed: true,
+      userMetadata: {},
+    };
   }
 
   const supabase = getServerSupabase();

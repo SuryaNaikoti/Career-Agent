@@ -73,8 +73,8 @@ export const ProfileScreen: React.FC = () => {
           id: 'services',
           icon: Mail,
           label: 'Connected Services',
-          description: 'Gmail Hiring Sync (Active)',
-          action: () => alert('Connected services management in Module 14.'),
+          description: 'Gmail Hiring Intelligence (Module 11)',
+          action: () => navigate('/app/hiring'),
         },
         {
           id: 'privacy',
@@ -86,9 +86,9 @@ export const ProfileScreen: React.FC = () => {
         {
           id: 'notifications',
           icon: Bell,
-          label: 'Alerts & Daily Digest',
-          description: 'Push & In-App enabled',
-          action: () => alert('Notifications in Module 16.'),
+          label: 'Alerts & Daily Report',
+          description: 'Daily Career Summary & Notifications (Module 12)',
+          action: () => navigate('/app/report'),
         },
         {
           id: 'settings',
@@ -102,10 +102,10 @@ export const ProfileScreen: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col pb-24">
+    <div className="min-h-screen bg-slate-50 flex flex-col pb-24 lg:pb-12">
       <TopBar title="Profile" />
 
-      <main className="max-w-[430px] mx-auto w-full px-4 pt-4 space-y-5">
+      <main className="w-full max-w-5xl mx-auto px-4 md:px-8 pt-4 md:pt-6 space-y-5">
         {/* Candidate Profile Card */}
         <div className="rounded-[22px] bg-white border border-slate-200/80 p-5 shadow-xs flex items-center gap-4">
           <Avatar name={displayName} size="lg" online={isAuthenticated} />

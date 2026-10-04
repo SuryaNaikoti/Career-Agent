@@ -42,7 +42,7 @@ export const SplashScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen p-8 max-w-[430px] mx-auto text-center select-none bg-gradient-to-b from-white via-slate-50 to-blue-50/50">
+    <div className="flex flex-col items-center justify-between min-h-screen p-8 w-full max-w-xl mx-auto text-center select-none bg-gradient-to-b from-white via-slate-50 to-blue-50/50">
       <div />
 
       <div className="flex flex-col items-center my-auto animate-in fade-in zoom-in-95 duration-500">

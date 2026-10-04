@@ -5,6 +5,7 @@ import { useAuth } from '../../features/authentication/auth.context.js';
 import { CareerAgentStatusCard } from '../../components/home/CareerAgentStatusCard.js';
 import { ActivityCardsGrid } from '../../components/home/ActivityCardsGrid.js';
 import { UpcomingInterviewCard } from '../../components/home/UpcomingInterviewCard.js';
+import { DailyReportCard } from '../../components/home/DailyReportCard.js';
 import { JobCard } from '../../components/jobs/JobCard.js';
 import { Sparkles, ArrowRight, Search, FileText, Briefcase, Bot } from 'lucide-react';
 import { DEMO_AGENT_STATUS } from '../../../mock/demo-data/agent.js';
@@ -35,11 +36,11 @@ export const HomeScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col pb-24">
+    <div className="min-h-screen bg-slate-50 flex flex-col pb-24 lg:pb-12">
       {/* Sticky Mobile Top Bar */}
       <TopBar />
 
-      <main className="max-w-[430px] mx-auto w-full px-4 pt-4 space-y-6">
+      <main className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-6 space-y-6">
         {/* Greeting & AI Companion Lockup */}
         <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40 p-5 border border-blue-100/60 shadow-xs">
           <div className="flex items-start justify-between">
@@ -132,6 +133,11 @@ export const HomeScreen: React.FC = () => {
             {/* Trailing clearance spacer so final item is never clipped at the right edge */}
             <div className="w-2 shrink-0" aria-hidden="true" />
           </div>
+        </section>
+
+        {/* Daily Career Report Card (Module 12) */}
+        <section>
+          <DailyReportCard />
         </section>
 
         {/* Career Agent Status Card */}

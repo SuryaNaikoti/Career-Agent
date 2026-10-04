@@ -1,73 +1,111 @@
-# Future Database Specification (Supabase PostgreSQL + pgvector)
+# Database Specification (Supabase PostgreSQL + pgvector)
 
-*Note: Database provisioning will take place in subsequent modules. Do NOT provision Firebase or alter this intended architecture.*
+*Status: FOUNDATION ESTABLISHED (Module 00)*
 
-## 1. Primary Relational Schema Plan
+## 1. Terminology Standard
+All candidate profiles are stored in the canonical table **`candidate_profiles`** (never `candidates`), with direct ownership linked to Supabase authentication identity (`auth.users.id`).
 
-### `candidates`
-- `id`: uuid (Primary Key, matches `auth.users.id`)
-- `name`: text not null
-- `email`: text unique not null
-- `headline`: text
-- `experience_years`: numeric(4,1)
-- `created_at`: timestamptz default now()
-- `updated_at`: timestamptz default now()
+---
 
-### `candidate_resumes`
-- `id`: uuid (Primary Key)
-- `candidate_id`: uuid (Foreign Key -> `candidates.id`)
-- `file_url`: text
-- `parsed_text`: text
-- `verified_skills`: text[]
-- `embedding`: vector(1536) -- for semantic matching
-- `is_primary`: boolean default true
+## 2. Implemented Foundation Schema (Migration `20260930000000_create_candidate_foundation.sql`)
 
-### `candidate_preferences`
-- `id`: uuid (Primary Key)
-- `candidate_id`: uuid (Foreign Key -> `candidates.id`)
-- `target_roles`: text[]
-- `locations`: text[]
-- `min_salary`: numeric(12,2)
-- `currency`: varchar(3) default 'INR'
-- `work_modes`: text[] -- ['Remote', 'Hybrid', 'On-site']
+### `candidate_profiles` [FOUNDATION]
+- `id`: UUID (Primary Key, default `gen_random_uuid()`)
+- `user_id`: UUID (Unique Foreign Key -> `auth.users.id` ON DELETE CASCADE)
+- `display_name`: TEXT NOT NULL
+- `headline`: TEXT
+- `career_goal`: TEXT
+- `target_roles`: TEXT[] DEFAULT '{}'
+- `total_experience_years`: NUMERIC(4, 1) DEFAULT 0.0
+- `preferred_locations`: TEXT[] DEFAULT '{}'
+- `work_modes`: TEXT[] DEFAULT '{}'
+- `expected_salary_min`: NUMERIC(12, 2)
+- `expected_salary_max`: NUMERIC(12, 2)
+- `currency`: VARCHAR(3) DEFAULT 'INR'
+- `work_authorization`: TEXT
+- `provenance`: `fact_provenance` ENUM ('CANDIDATE_PROVIDED', 'CANDIDATE_CONFIRMED', 'AI_SUGGESTED', 'UNKNOWN')
+- `metadata`: JSONB DEFAULT '{}'::jsonb
+- `created_at`: TIMESTAMPTZ DEFAULT timezone('utc', now())
+- `updated_at`: TIMESTAMPTZ DEFAULT timezone('utc', now())
 
-### `jobs`
-- `id`: uuid (Primary Key)
-- `title`: text not null
-- `company`: text not null
-- `location`: text
-- `work_mode`: text
-- `salary_min`: numeric(12,2)
-- `salary_max`: numeric(12,2)
-- `description`: text
-- `skills_required`: text[]
-- `embedding`: vector(1536)
-- `source`: text
-- `source_url`: text
-- `posted_at`: timestamptz
+### `candidate_skills` [FOUNDATION]
+- `id`: UUID PRIMARY KEY
+- `profile_id`: UUID REFERENCES `candidate_profiles.id` ON DELETE CASCADE
+- `user_id`: UUID REFERENCES `auth.users.id` ON DELETE CASCADE
+- `skill_name`: TEXT NOT NULL
+- `years_of_experience`: NUMERIC(4, 1)
+- `proficiency_level`: TEXT ('beginner', 'intermediate', 'expert')
+- `provenance`: `fact_provenance` ENUM
+- `created_at`, `updated_at`: TIMESTAMPTZ
 
-### `applications`
-- `id`: uuid (Primary Key)
-- `candidate_id`: uuid (Foreign Key -> `candidates.id`)
-- `job_id`: uuid (Foreign Key -> `jobs.id`)
-- `status`: text not null -- ('Ready', 'Submitted', 'Interview', etc.)
-- `match_score`: integer
-- `tailored_resume_url`: text
-- `cover_letter_text`: text
-- `application_code`: text
-- `submitted_at`: timestamptz
-- `created_at`: timestamptz default now()
+### `candidate_experience` [FOUNDATION]
+- `id`: UUID PRIMARY KEY
+- `profile_id`: UUID REFERENCES `candidate_profiles.id` ON DELETE CASCADE
+- `user_id`: UUID REFERENCES `auth.users.id` ON DELETE CASCADE
+- `company`: TEXT NOT NULL
+- `role_title`: TEXT NOT NULL
+- `start_date`: DATE
+- `end_date`: DATE
+- `is_current`: BOOLEAN DEFAULT false
+- `description`: TEXT
+- `skills_used`: TEXT[] DEFAULT '{}'
+- `provenance`: `fact_provenance` ENUM
+- `created_at`, `updated_at`: TIMESTAMPTZ
 
-### `human_tasks`
-- `id`: uuid (Primary Key)
-- `candidate_id`: uuid (Foreign Key -> `candidates.id`)
-- `application_id`: uuid (Foreign Key -> `applications.id`)
-- `task_type`: text
-- `question`: text
-- `answer`: text
-- `is_completed`: boolean default false
+### `candidate_education` [FOUNDATION]
+- `id`: UUID PRIMARY KEY
+- `profile_id`: UUID REFERENCES `candidate_profiles.id` ON DELETE CASCADE
+- `user_id`: UUID REFERENCES `auth.users.id` ON DELETE CASCADE
+- `institution`: TEXT NOT NULL
+- `degree`: TEXT NOT NULL
+- `field_of_study`: TEXT
+- `start_date`: DATE
+- `end_date`: DATE
+- `provenance`: `fact_provenance` ENUM
+- `created_at`, `updated_at`: TIMESTAMPTZ
 
-## 2. Row Level Security (RLS) Strategy
-- `candidates`: `auth.uid() = id` (Candidates may only read and write their own profile).
-- `applications`: `auth.uid() = candidate_id` (Candidates may only read and modify their own applications).
-- `jobs`: Public read access for indexed jobs.
+### `candidate_preferences` [FOUNDATION]
+- `id`: UUID PRIMARY KEY
+- `profile_id`: UUID UNIQUE REFERENCES `candidate_profiles.id` ON DELETE CASCADE
+- `user_id`: UUID REFERENCES `auth.users.id` ON DELETE CASCADE
+- `target_roles`: TEXT[] DEFAULT '{}'
+- `locations`: TEXT[] DEFAULT '{}'
+- `work_modes`: TEXT[] DEFAULT '{}'
+- `min_salary`: NUMERIC(12, 2)
+- `currency`: VARCHAR(3) DEFAULT 'INR'
+- `benefits_preferred`: TEXT[] DEFAULT '{}'
+- `companies_targeted`: TEXT[] DEFAULT '{}'
+- `companies_excluded`: TEXT[] DEFAULT '{}'
+- `provenance`: `fact_provenance` ENUM
+- `created_at`, `updated_at`: TIMESTAMPTZ
+
+---
+
+## 3. Candidate Truth Layer: Provenance Engine
+Every candidate fact carries an explicit provenance tag:
+1. `CANDIDATE_PROVIDED`: Explicitly entered by the candidate.
+2. `CANDIDATE_CONFIRMED`: Verified or approved by candidate action.
+3. `AI_SUGGESTED`: Suggested or rephrased by AI orchestrator. **NEVER automatically elevated to verified candidate fact without explicit confirmation.**
+4. `UNKNOWN`: Unverified or unconfirmed legacy datum.
+
+---
+
+## 4. Planned Future Entities (Modules 02 - 10) [PLANNED]
+- `candidate_resumes`: Resume storage URL, raw parsed text, embedding vector(1536).
+- `jobs`: Discovered and normalized opportunities with vector embeddings.
+- `job_sources`: Feed adapters, platforms, and API sync states.
+- `applications`: End-to-end application lifecycle tracking.
+- `application_documents`: Tailored resumes and cover letters.
+- `application_tasks`: Human confirmation prompts and questionnaire answers.
+- `email_accounts` / `email_messages`: Gmail sync state.
+- `agent_runs` / `agent_actions`: Autonomous execution audits.
+
+---
+
+## 5. Row Level Security (RLS) Policies
+- All candidate-owned tables enforce RLS:
+  - `SELECT`: `auth.uid() = user_id`
+  - `INSERT`: `auth.uid() = user_id`
+  - `UPDATE`: `auth.uid() = user_id`
+  - `DELETE`: `auth.uid() = user_id`
+- Client-supplied `user_id` parameters are never trusted in security contexts.

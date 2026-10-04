@@ -34,7 +34,7 @@ export const BottomNavigation: React.FC = () => {
   return (
     <nav
       aria-label="Bottom Navigation"
-      className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_16px_rgba(15,23,42,0.03)] pb-safe transition-all"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_16px_rgba(15,23,42,0.03)] pb-safe transition-all"
     >
       <div className="max-w-[430px] mx-auto grid grid-cols-5 h-16 items-center px-1">
         {NAV_ITEMS.map((item) => {

@@ -46,9 +46,9 @@ export const ResetPasswordScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between p-6 max-w-[430px] mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 flex flex-col justify-between p-6">
       {/* Top Header */}
-      <div className="pt-4 flex items-center justify-between">
+      <div className="w-full max-w-5xl mx-auto pt-2 flex items-center justify-between">
         <button
           onClick={() => navigate('/auth')}
           className="w-9 h-9 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-500 hover:text-slate-900 rounded-xl"
@@ -67,7 +67,7 @@ export const ResetPasswordScreen: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="my-auto py-6">
+      <div className="my-auto py-8 w-full max-w-md md:max-w-lg mx-auto bg-white/80 md:bg-white md:shadow-xl md:border md:border-slate-200/80 md:rounded-3xl p-6 md:p-8 space-y-5">
         {success ? (
           <div className="text-center space-y-4 animate-in fade-in">
             <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-xs">

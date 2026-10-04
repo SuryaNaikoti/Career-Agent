@@ -1,49 +1,69 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { TopBar } from '../../components/navigation/TopBar.js';
 import { ApplicationCard } from '../../components/applications/ApplicationCard.js';
 import { Tabs } from '../../components/ui/Tabs.js';
 import { EmptyState } from '../../components/ui/EmptyState.js';
-import { FileText, Plus } from 'lucide-react';
+import { FileText, Plus, RefreshCw } from 'lucide-react';
 import { Button } from '../../components/ui/Button.js';
 import { useRouter } from '../../app/router/index.js';
-import { DEMO_APPLICATIONS } from '../../../mock/demo-data/applications.js';
+import { applicationsApiClient } from '../../features/applications/applications.api.js';
 
 export const ApplicationsScreen: React.FC = () => {
   const { navigate } = useRouter();
   const [activeTab, setActiveTab] = useState('all');
+  const [applications, setApplications] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    applicationsApiClient.listApplications()
+      .then((data) => {
+        if (isMounted) {
+          setApplications(Array.isArray(data) ? data : []);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setApplications([]);
+          setIsLoading(false);
+        }
+      });
+    return () => { isMounted = false; };
+  }, []);
 
   const filterTabs = [
-    { id: 'all', label: 'All', badge: DEMO_APPLICATIONS.length },
+    { id: 'all', label: 'All', badge: applications.length },
     {
       id: 'ready',
       label: 'Ready',
-      badge: DEMO_APPLICATIONS.filter((a) => a.status === 'Ready').length,
+      badge: applications.filter((a) => a.status === 'READY_FOR_SUBMISSION').length,
+    },
+    {
+      id: 'action',
+      label: 'Needs Action',
+      badge: applications.filter((a) => a.status === 'HUMAN_ACTION_REQUIRED').length,
     },
     {
       id: 'submitted',
       label: 'Submitted',
-      badge: DEMO_APPLICATIONS.filter((a) => a.status === 'Submitted').length,
-    },
-    {
-      id: 'interview',
-      label: 'Interview',
-      badge: DEMO_APPLICATIONS.filter((a) => a.status === 'Interview').length,
+      badge: applications.filter((a) => a.status === 'SUBMITTED').length,
     },
   ];
 
   const filteredApplications = useMemo(() => {
-    if (activeTab === 'all') return DEMO_APPLICATIONS;
-    if (activeTab === 'ready') return DEMO_APPLICATIONS.filter((a) => a.status === 'Ready');
-    if (activeTab === 'submitted') return DEMO_APPLICATIONS.filter((a) => a.status === 'Submitted');
-    if (activeTab === 'interview') return DEMO_APPLICATIONS.filter((a) => a.status === 'Interview');
-    return DEMO_APPLICATIONS;
-  }, [activeTab]);
+    if (activeTab === 'all') return applications;
+    if (activeTab === 'ready') return applications.filter((a) => a.status === 'READY_FOR_SUBMISSION');
+    if (activeTab === 'action') return applications.filter((a) => a.status === 'HUMAN_ACTION_REQUIRED');
+    if (activeTab === 'submitted') return applications.filter((a) => a.status === 'SUBMITTED');
+    return applications;
+  }, [activeTab, applications]);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col pb-24">
+    <div className="min-h-screen bg-slate-50 flex flex-col pb-24 lg:pb-12">
       <TopBar title="Applications" />
 
-      <main className="max-w-[430px] mx-auto w-full px-4 pt-4 space-y-4">
+      <main className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-6 space-y-5">
         {/* Status Category Tabs */}
         <Tabs
           items={filterTabs}
@@ -59,7 +79,7 @@ export const ApplicationsScreen: React.FC = () => {
 
         {/* Application Cards */}
         {filteredApplications.length > 0 ? (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredApplications.map((app) => (
               <ApplicationCard key={app.id} application={app} />
             ))}

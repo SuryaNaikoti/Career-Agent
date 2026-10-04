@@ -26,8 +26,8 @@ export const TopBar: React.FC<TopBarProps> = ({
     (user?.email ? user.email.split('@')[0] : DEMO_CANDIDATE.name);
 
   return (
-    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 pt-safe">
-      <div className="max-w-[430px] mx-auto px-4 h-14 flex items-center justify-between">
+    <header className="lg:hidden sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 pt-safe">
+      <div className="w-full px-4 h-14 flex items-center justify-between">
         {showBack ? (
           <div className="flex items-center gap-3">
             <button
@@ -60,10 +60,10 @@ export const TopBar: React.FC<TopBarProps> = ({
             rightAction
           ) : (
             <>
-              {/* Notification Bell */}
+              {/* Notification Center Bell */}
               <button
-                aria-label="Notifications"
-                onClick={() => navigate('/app/applications')}
+                aria-label="Notification Center"
+                onClick={() => navigate('/app/notifications')}
                 className="relative w-9 h-9 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
               >
                 <Bell className="w-5 h-5" />

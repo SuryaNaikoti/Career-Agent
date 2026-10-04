@@ -6,42 +6,61 @@ import { Badge } from '../ui/Badge.js';
 import { cn } from '../../lib/utils/cn.js';
 
 export interface ApplicationCardProps {
-  application: JobApplication;
+  application: any;
 }
 
 export const ApplicationCard: React.FC<ApplicationCardProps> = ({ application }) => {
   const { navigate } = useRouter();
 
-  const getStatusBadge = (status: ApplicationStatus) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
+      case 'SUBMITTED':
       case 'Submitted':
         return (
           <Badge variant="match" icon={<CheckCircle2 className="w-3 h-3 text-emerald-600" />}>
             Submitted
           </Badge>
         );
-      case 'Interview':
+      case 'HUMAN_ACTION_REQUIRED':
         return (
-          <Badge variant="purple" icon={<Calendar className="w-3 h-3 text-indigo-600" />}>
-            Interview Scheduled
+          <Badge variant="warning" icon={<Clock className="w-3 h-3 text-amber-600" />}>
+            Needs Action
           </Badge>
         );
+      case 'SUBMITTING':
+        return (
+          <Badge variant="blue" icon={<Clock className="w-3 h-3 text-blue-600 animate-spin" />}>
+            Submitting
+          </Badge>
+        );
+      case 'READY_FOR_SUBMISSION':
       case 'Ready':
         return (
           <Badge variant="blue" icon={<FileCheck className="w-3 h-3 text-blue-600" />}>
             Ready to Submit
           </Badge>
         );
-      case 'Screening':
+      case 'SUBMISSION_FAILED':
         return (
-          <Badge variant="warning" icon={<Clock className="w-3 h-3 text-amber-600" />}>
-            Screening
+          <Badge variant="neutral">
+            Failed
+          </Badge>
+        );
+      case 'CANCELLED':
+        return (
+          <Badge variant="neutral">
+            Cancelled
           </Badge>
         );
       default:
         return <Badge variant="neutral">{status}</Badge>;
     }
   };
+
+  const company = application.job?.company || application.metadata?.companyName || 'Company';
+  const title = application.job?.title || application.metadata?.jobTitle || 'Role';
+  const companyLetter = application.job?.companyLetter || company[0] || 'C';
+  const companyColor = application.job?.companyColor || '#0F172A';
 
   return (
     <div
@@ -53,14 +72,14 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = ({ application })
         <div className="flex items-start gap-3">
           <div
             className="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-base text-white shrink-0 shadow-2xs"
-            style={{ backgroundColor: application.job.companyColor || '#0F172A' }}
+            style={{ backgroundColor: companyColor }}
           >
-            {application.job.companyLetter}
+            {companyLetter}
           </div>
           <div className="min-w-0">
-            <div className="text-xs font-medium text-slate-500 truncate">{application.job.company}</div>
+            <div className="text-xs font-medium text-slate-500 truncate">{company}</div>
             <h3 className="text-sm font-bold text-slate-900 tracking-tight truncate mt-0.5 group-hover:text-blue-600 transition-colors">
-              {application.job.title}
+              {title}
             </h3>
           </div>
         </div>

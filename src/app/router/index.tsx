@@ -12,9 +12,16 @@ export type AppRoute =
   | '/app/applications'
   | `/app/applications/${string}`
   | '/app/agent'
+  | '/app/tasks'
+  | `/app/tasks/${string}`
+  | '/app/hiring'
+  | '/app/gmail'
   | '/app/profile'
   | '/app/resume'
-  | '/app/preferences';
+  | '/app/preferences'
+  | '/app/report'
+  | `/app/reports/${string}`
+  | '/app/notifications';
 
 interface RouterContextValue {
   path: string;
@@ -81,15 +88,23 @@ export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const params = useMemo(() => {
+    const searchParams: Record<string, string> = {};
+    if (typeof window !== 'undefined' && window.location.search) {
+      const q = new URLSearchParams(window.location.search);
+      q.forEach((val, key) => {
+        searchParams[key] = val;
+      });
+    }
+
     // Check job route pattern
     const jobMatch = matchRouteParams('/app/jobs/:jobId', path);
-    if (jobMatch) return jobMatch;
+    if (jobMatch) return { ...searchParams, ...jobMatch };
 
     // Check application route pattern
     const appMatch = matchRouteParams('/app/applications/:applicationId', path);
-    if (appMatch) return appMatch;
+    if (appMatch) return { ...searchParams, ...appMatch };
 
-    return {};
+    return searchParams;
   }, [path]);
 
   return (

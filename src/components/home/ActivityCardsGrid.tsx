@@ -55,6 +55,7 @@ export const ActivityCardsGrid: React.FC<ActivityCardsGridProps> = ({ metrics })
             key={item.id}
             onClick={() => {
               if (item.tint === 'purple' || item.tint === 'blue') navigate('/app/jobs');
+              else if (item.tint === 'amber') navigate('/app/tasks');
               else navigate('/app/applications');
             }}
             className={cn(

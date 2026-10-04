@@ -15,10 +15,15 @@ import { JobsScreen } from '../pages/jobs/JobsScreen.js';
 import { JobDetailScreen } from '../pages/jobs/JobDetailScreen.js';
 import { ApplicationsScreen } from '../pages/applications/ApplicationsScreen.js';
 import { ApplicationDetailScreen } from '../pages/applications/ApplicationDetailScreen.js';
+import { PrepareApplicationScreen } from '../pages/applications/PrepareApplicationScreen.js';
 import { AgentScreen } from '../pages/agent/AgentScreen.js';
+import { TasksScreen } from '../pages/tasks/TasksScreen.js';
+import { HiringIntelligenceScreen } from '../pages/hiring/HiringIntelligenceScreen.js';
 import { ProfileScreen } from '../pages/profile/ProfileScreen.js';
 import { ResumeScreen } from '../pages/profile/ResumeScreen.js';
 import { PreferencesScreen } from '../pages/profile/PreferencesScreen.js';
+import { CareerReportScreen } from '../pages/report/CareerReportScreen.js';
+import { NotificationsScreen } from '../pages/notifications/NotificationsScreen.js';
 
 const RouteRenderer: React.FC = () => {
   const { path, navigate } = useRouter();
@@ -91,6 +96,10 @@ const RouteRenderer: React.FC = () => {
     return <JobsScreen />;
   }
 
+  if (path === '/app/applications/prepare') {
+    return <PrepareApplicationScreen />;
+  }
+
   if (path.startsWith('/app/applications/') && path !== '/app/applications') {
     return <ApplicationDetailScreen />;
   }
@@ -103,6 +112,14 @@ const RouteRenderer: React.FC = () => {
     return <AgentScreen />;
   }
 
+  if (path === '/app/tasks' || path.startsWith('/app/tasks/')) {
+    return <TasksScreen />;
+  }
+
+  if (path === '/app/hiring' || path === '/app/gmail') {
+    return <HiringIntelligenceScreen />;
+  }
+
   if (path === '/app/profile') {
     return <ProfileScreen />;
   }
@@ -113,6 +130,14 @@ const RouteRenderer: React.FC = () => {
 
   if (path === '/app/preferences') {
     return <PreferencesScreen />;
+  }
+
+  if (path === '/app/report' || path.startsWith('/app/reports/')) {
+    return <CareerReportScreen />;
+  }
+
+  if (path === '/app/notifications') {
+    return <NotificationsScreen />;
   }
 
   // Fallback to Home screen

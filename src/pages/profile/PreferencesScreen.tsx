@@ -9,10 +9,10 @@ export const PreferencesScreen: React.FC = () => {
   const { navigate } = useRouter();
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col pb-24">
+    <div className="min-h-screen bg-slate-50 flex flex-col pb-24 lg:pb-12">
       <TopBar showBack title="Job Preferences" />
 
-      <main className="max-w-[430px] mx-auto w-full px-4 pt-4 space-y-4">
+      <main className="w-full max-w-5xl mx-auto px-4 md:px-8 pt-4 md:pt-6 space-y-5">
         {/* Target Roles */}
         <div className="rounded-[22px] bg-white border border-slate-200/80 p-5 shadow-xs space-y-3">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">

@@ -135,9 +135,9 @@ export const AuthScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between p-6 max-w-[430px] mx-auto select-none">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 flex flex-col justify-between p-6 select-none">
       {/* Top Header */}
-      <div className="pt-4 flex items-center justify-between">
+      <div className="w-full max-w-5xl mx-auto pt-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
             <Sparkles className="w-4 h-4 fill-white" />
@@ -158,8 +158,8 @@ export const AuthScreen: React.FC = () => {
         )}
       </div>
 
-      {/* Main Authentication Flow */}
-      <div className="my-auto py-6 space-y-5">
+      {/* Main Authentication Flow Container */}
+      <div className="my-auto py-8 w-full max-w-md md:max-w-lg mx-auto bg-white/80 md:bg-white md:shadow-xl md:border md:border-slate-200/80 md:rounded-3xl p-6 md:p-8 space-y-5">
         {!isConfigured && <ConfigMissingBanner />}
 
         {/* Global Error Banner */}

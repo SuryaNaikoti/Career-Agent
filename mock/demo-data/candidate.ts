@@ -1,6 +1,10 @@
-import { ActivityMetric, UpcomingEvent, CandidateProfile } from '../../src/types/candidate.js';
+import { ActivityMetric, UpcomingEvent, DemoCandidateLegacyView } from '../../src/types/candidate.js';
 
-export const DEMO_CANDIDATE: CandidateProfile = {
+/**
+ * DEVELOPMENT ONLY - Mock Candidate Dataset
+ * Used exclusively for offline prototype visualization prior to active database hydration.
+ */
+export const DEMO_CANDIDATE: DemoCandidateLegacyView = {
   id: 'cand-001',
   name: 'Surya',
   title: 'Senior Frontend Developer',
