@@ -35,8 +35,8 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
 
       {/* Main SaaS App Shell Area */}
       <div className="flex-1 flex flex-col min-w-0 bg-slate-50 min-h-screen relative overflow-x-hidden">
-        {/* Optional top install banner if running on mobile device in browser and installable */}
-        {isInstallable && !isInstalled && showTopInstallBanner && (
+        {/* Top install banner on mobile device if running in browser and not already installed */}
+        {!isInstalled && showTopInstallBanner && (
           <div className="lg:hidden">
             <InstallPrompt
               variant="banner"
